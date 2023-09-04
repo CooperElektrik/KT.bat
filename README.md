@@ -9,3 +9,7 @@ The main script (`trainer-prep.bat`) assumes the existence of an already set up 
 On the first time running, specify the location of Kohya's trainer repo and the model location (specify full paths). These will be written to a file called `path` in the same directory as the batch script.
 
 After that, tell it what the name of the concept is and how many epochs to train for. The rest is fully automated.
+
+# Todo
+- [ ] Let the user specify what settings to use. They should be able to edit those later.
+- [ ] Fix bug if there is any.
