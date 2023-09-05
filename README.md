@@ -11,5 +11,5 @@ On the first time running, specify the location of Kohya's trainer repo and the 
 After that, tell it what the name of the concept is and how many epochs to train for. The rest is fully automated.
 
 # Todo
-- [ ] Let the user specify what settings to use. They should be able to edit those later.
+- [x] Let the user specify what settings to use. They should be able to edit those later.
 - [ ] Fix bug if there is any.

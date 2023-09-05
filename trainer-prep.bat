@@ -1,10 +1,21 @@
 @echo off
 setlocal EnableDelayedExpansion
 
+echo LoRA Autotrainer Script, by CooperElektrik.
+echo ---
+
 set num=0
 set numt=0
 set numall=0
 set img-exist=0
+
+if not exist settings (
+   echo Settings file not found.
+   call settings.bat
+) else (
+   echo Reusing settings from existing file. A notepad instance is now open for you to check. Do close it afterwards to continue.
+   notepad settings
+)
 
 set "pathLocation=path"
 if not exist %pathLocation% (
@@ -129,6 +140,24 @@ for /d %%I in ("!folderPath!\image\*_*") do (
     set "imageFolder=%%I"
 )
 
+
+set variables=nctpp min_bk_res max_bk_res bk_step w_res h_res net_alpha net_dim rank_drop mod_drop net_drop tenc_lr unet_lr lr lr_sched lr_sched_cycle scale_w_norm train_batch data_worker token_length clip_skip snr_gamma
+
+rem Read values from settings.txt and set the variables
+for /f "usebackq tokens=1* delims==" %%A in ("settings") do (
+    for %%V in (!variables!) do (
+        if "%%A"=="%%V" (
+            set "%%A=%%B"
+        )
+    )
+)
+
+rem Echo the values of the variables
+echo Using settings from file.
+for %%V in (!variables!) do (
+    echo %%V: !%%V!
+)
+
 rem Export the paths into variables
 set "imagePath=!imageFolder!"
 set "imagePathK=!folderPath!\image"
@@ -138,10 +167,10 @@ set "modelPath=!folderPath!\model"
 echo Image Path: !imagePath!
 echo Log Path: !logPath!
 echo Model Path: !modelPath!
-set /a step=(epoch * num) / 4
+set /a step=(epoch * num) / train_batch
 set /a dropOutInterval=epoch / 10
 rem This part will recheck if the result is the same
-set /a stepCheck1=step * 4
+set /a stepCheck1=step * train_batch
 set /a stepCheck2=epoch * num
 
 if !stepCheck1! neq !stepCheck2! (
@@ -162,8 +191,7 @@ echo Dropout interval: !dropOutInterval!
 echo Will start trainer after this part. If you don't want to, press CTRL+C.
 pause
 
-set launchCommand=accelerate launch --num_cpu_threads_per_process=2 "./train_network.py" --enable_bucket --min_bucket_reso=384 --max_bucket_reso=1280 --pretrained_model_name_or_path="!modelLocation!" --train_data_dir="!imagePathK!" --resolution="960,960" --output_dir="!modelPath!" --logging_dir="!logPath!" --network_alpha="128" --save_model_as=safetensors --network_module=networks.lora --network_args rank_dropout="0.15" module_dropout="0.1" --text_encoder_lr=5e-05 --unet_lr=0.0001 --network_dim=64 --output_name="!name!" --lr_scheduler_num_cycles="1" --scale_weight_norms="1.2" --network_dropout="0.15" --no_half_vae --learning_rate="5e-05" --lr_scheduler="constant" --train_batch_size="4" --max_train_steps="!step!" --save_every_n_epochs="1" --mixed_precision="bf16" --save_precision="bf16" --seed="1234" --caption_extension=".txt" --cache_latents --optimizer_type="AdamW8bit" --max_data_loader_n_workers="1" --max_token_length=225 --clip_skip=2 --caption_dropout_every_n_epochs="!dropOutInterval!" --caption_dropout_rate="0.05" --bucket_reso_steps=128 --min_snr_gamma=5 --shuffle_caption --gradient_checkpointing --xformers --persistent_data_loader_workers --bucket_no_upscale --noise_offset=0.0
-
+set launchCommand=accelerate launch --num_cpu_threads_per_process=!nctpp! "./train_network.py" --enable_bucket --min_bucket_reso=!min_bk_res! --max_bucket_reso=!max_bk_res! --pretrained_model_name_or_path="!modelLocation!" --train_data_dir="!imagePathK!" --resolution="!w_res!,!h_res!" --output_dir="!modelPath!" --logging_dir="!logPath!" --network_alpha="!net_alpha!" --save_model_as=safetensors --network_module=networks.lora --network_args rank_dropout="!rank_drop!" module_dropout="!mod_drop!" --text_encoder_lr=!tenc_lr! --unet_lr=!unet_lr! --network_dim=!net_dim! --output_name="!name!" --lr_scheduler_num_cycles="!lr_sched_cycle!" --scale_weight_norms="!scale_w_norm!" --network_dropout="!net_drop!" --no_half_vae --learning_rate="!lr!" --lr_scheduler="!lr_sched!" --train_batch_size="!train_batch!" --max_train_steps="!step!" --save_every_n_epochs="1" --mixed_precision="bf16" --save_precision="bf16" --seed="1234" --caption_extension=".txt" --cache_latents --optimizer_type="AdamW8bit" --max_data_loader_n_workers="!data_worker!" --max_token_length=!token_length! --clip_skip=!clip_skip! --caption_dropout_every_n_epochs="!dropOutInterval!" --caption_dropout_rate="0.05" --bucket_reso_steps=!bk_step! --min_snr_gamma=!snr_gamma! --shuffle_caption --gradient_checkpointing --xformers --persistent_data_loader_workers --bucket_no_upscale --noise_offset=0.0
 rem Set the target directory and script filename
 set "targetDirectory=!trainerLocation!"
 set "scriptFilename=start-train.bat"
