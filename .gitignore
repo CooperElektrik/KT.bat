@@ -1,5 +1,5 @@
 settings
-test.bat
+test*.bat
 path
 dummy
 missing-check.bat

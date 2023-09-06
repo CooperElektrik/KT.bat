@@ -24,9 +24,11 @@ echo data_worker - Data Loader Workers. Must be 1 or higher.
 echo token_length - Token Length. Available values: 75, 150, 225
 echo clip_skip - Clip Skip. Should be 2 for NAI
 echo snr_gamma - SNR Gamma. Set this to 5 or 0.
+echo v2 - Stable Diffusion 2.X Training. Set to 0 if you're just training for SD 1.5
+echo v_parameter - V Parameterization for SD 2.X. Set to 1 if you're using it, otherwhise leave blank.
 
 rem Define the list of variables to set
-set variables=nctpp min_bk_res max_bk_res bk_step w_res h_res net_alpha net_dim rank_drop mod_drop net_drop tenc_lr unet_lr lr lr_sched lr_sched_cycle scale_w_norm train_batch data_worker token_length clip_skip snr_gamma
+set variables=nctpp min_bk_res max_bk_res bk_step w_res h_res net_alpha net_dim rank_drop mod_drop net_drop tenc_lr unet_lr lr lr_sched lr_sched_cycle scale_w_norm train_batch data_worker token_length clip_skip snr_gamma v2 v_parameter
 
 rem Initialize the settings file
 echo. > settings
