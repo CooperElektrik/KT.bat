@@ -9,7 +9,7 @@ echo bk_step - Bucket Resolution Step. Recommended: 128
 echo w_res - Resolution (width). Recommended: 768
 echo h_res - Resolution (height). Recommended: 768
 echo net_alpha - Network Alpha. Recommended: 2X or equal to Network Dim
-echo net_dim - Network Dim. Recommended: Half or equal to Network Dim
+echo net_dim - Network Dim. Recommended: Half or equal to Network Alpha
 echo rank_drop - Rank Dropout. Recommended: 0.15
 echo mod_drop - Module Dropout. Recommended: 0.1
 echo net_drop - Network Dropout. Recommended: 0.15
@@ -25,7 +25,7 @@ echo token_length - Token Length. Available values: 75, 150, 225
 echo clip_skip - Clip Skip. Should be 2 for NAI
 echo snr_gamma - SNR Gamma. Set this to 5 or 0.
 echo v2 - Stable Diffusion 2.X Training. Set to 0 if you're just training for SD 1.5
-echo v_parameter - V Parameterization for SD 2.X. Set to 1 if you're using it, otherwhise leave blank.
+echo v_parameter - V Parameterization for SD 2.X. Set to 1 if you're using it, otherwise leave blank.
 
 rem Define the list of variables to set
 set variables=nctpp min_bk_res max_bk_res bk_step w_res h_res net_alpha net_dim rank_drop mod_drop net_drop tenc_lr unet_lr lr lr_sched lr_sched_cycle scale_w_norm train_batch data_worker token_length clip_skip snr_gamma v2 v_parameter
