@@ -201,14 +201,6 @@ echo Dropout interval: !dropOutInterval!
 echo Will start trainer after this part. If you don't want to, press CTRL+C.
 pause
 
-set launchCommand=accelerate launch --num_cpu_threads_per_process=!nctpp! "./train_network.py" --enable_bucket --min_bucket_reso=!min_bk_res! --max_bucket_reso=!max_bk_res! --pretrained_model_name_or_path="!modelLocation!" --train_data_dir="!imagePathK!" --resolution="!w_res!,!h_res!" --output_dir="!modelPath!" --logging_dir="!logPath!" --network_alpha="!net_alpha!" --save_model_as=safetensors --network_module=networks.lora --network_args rank_dropout="!rank_drop!" module_dropout="!mod_drop!" --text_encoder_lr=!tenc_lr! --unet_lr=!unet_lr! --network_dim=!net_dim! --output_name="!name!" --lr_scheduler_num_cycles="!lr_sched_cycle!" --scale_weight_norms="!scale_w_norm!" --network_dropout="!net_drop!" --no_half_vae --learning_rate="!lr!" --lr_scheduler="!lr_sched!" --train_batch_size="!train_batch!" --max_train_steps="!step!" --save_every_n_epochs="1" --mixed_precision="bf16" --save_precision="bf16" --seed="1234" --caption_extension=".txt" --cache_latents --optimizer_type="AdamW8bit" --max_data_loader_n_workers="!data_worker!" --max_token_length=!token_length! --clip_skip=!clip_skip! --caption_dropout_every_n_epochs="!dropOutInterval!" --caption_dropout_rate="0.05" --bucket_reso_steps=!bk_step! --min_snr_gamma=!snr_gamma! --shuffle_caption --gradient_checkpointing --xformers --persistent_data_loader_workers --bucket_no_upscale --noise_offset=0.0
-if "%v2%"=="1" (
-    if "%v_parameter%"=="1" (
-    set launchCommand=!launchCommand! --v2 --v_parameterization 
-    ) else (
-        set launchCommand=!launchCommand! --v2
-    )
-)
 rem Set the target directory and script filename
 set "targetDirectory=!trainerLocation!"
 set "scriptFilename=start-train.bat"
@@ -223,6 +215,16 @@ if exist %scriptFilename% (
    echo Found existing %scriptFilename% script, removing it now.
    del %scriptFilename%
 )
+
+echo set launchCommand=accelerate launch --num_cpu_threads_per_process=!nctpp! "./train_network.py" --enable_bucket --min_bucket_reso=!min_bk_res! --max_bucket_reso=!max_bk_res! --pretrained_model_name_or_path="!modelLocation!" --train_data_dir="!imagePathK!" --resolution="!w_res!,!h_res!" --output_dir="!modelPath!" --logging_dir="!logPath!" --network_alpha="!net_alpha!" --save_model_as=safetensors --network_module=networks.lora --network_args rank_dropout="!rank_drop!" module_dropout="!mod_drop!" --text_encoder_lr=!tenc_lr! --unet_lr=!unet_lr! --network_dim=!net_dim! --output_name="!name!" --lr_scheduler_num_cycles="!lr_sched_cycle!" --scale_weight_norms="!scale_w_norm!" --network_dropout="!net_drop!" --no_half_vae --learning_rate="!lr!" --lr_scheduler="!lr_sched!" --train_batch_size="!train_batch!" --max_train_steps="!step!" --save_every_n_epochs="1" --mixed_precision="bf16" --save_precision="bf16" --seed="1234" --caption_extension=".txt" --cache_latents --optimizer_type="AdamW8bit" --max_data_loader_n_workers="!data_worker!" --max_token_length=!token_length! --clip_skip=!clip_skip! --caption_dropout_every_n_epochs="!dropOutInterval!" --caption_dropout_rate="0.05" --bucket_reso_steps=!bk_step! --min_snr_gamma=!snr_gamma! --shuffle_caption --gradient_checkpointing --xformers --persistent_data_loader_workers --bucket_no_upscale --noise_offset=0.0 > temp.bat
+if "%v2%"=="1" (
+    if "%v_parameter%"=="1" (
+    echo --v2 --v_parameterization >> temp.bat
+    ) else (
+        echo --v2 >> temp.bat
+    )
+)
+
 rem Create the script content
 set "scriptContent=!launchCommand!"
 
@@ -236,8 +238,10 @@ timeout /t 20
 call %scriptFilename%
 
 rem Move LoRA to your specified WebUI directory
+echo Copying to your LoRA inference path.
 copy "%modelPath%\%name%.safetensors" "%loraDirLocation%"
-
+echo Removing temp.bat
+del temp.bat
 pause
 
 :eof
