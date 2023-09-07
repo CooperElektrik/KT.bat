@@ -1,7 +1,7 @@
 # KT.bat
 A collection of Windows batchfile scripts to automate the process of setting up and running Kohya LoRA trainer.
 
-I have no plan to support anything else other than SD1.5 LoRA training.
+Supports SD 1.5 and 2.X training. Working on SDXL.
 
 # How to use
 The main script (`trainer-prep.bat`) assumes the existence of an already set up clone of Kohya's repo, a checkpoint model it can use, and .png/jpg images with their accompanying .txt tag files. Also paths shouldn't have spaces in them.
