@@ -1,0 +1,1 @@
+echo Dummy message for SDXL

@@ -4,7 +4,7 @@ A collection of Windows batchfile scripts to automate the process of setting up 
 I have no plan to support anything else other than SD1.5 LoRA training.
 
 # How to use
-The main script (`trainer-prep.bat`) assumes the existence of an already set up clone of Kohya's repo, a checkpoint model it can use, and .png/jpg images with their accompanying .txt tag files. Also paths shouldn't have spaces in them.
+The main script (`start-train.bat`) assumes the existence of an already set up clone of Kohya's repo, a checkpoint model it can use, and .png/jpg images with their accompanying .txt tag files. Also paths shouldn't have spaces in them.
 
 On the first time running, specify trainer settings and the location of Kohya's trainer repo and the model location (specify full paths). These will be written to a file called `path` in the same directory as the batch script.
 
