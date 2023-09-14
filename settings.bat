@@ -39,13 +39,13 @@ rem Loop through each variable and prompt the user for its value
 for %%V in (!nVariables!) do (
     set /p "%%V=Enter integer value for %%V: "
     set /a %%V=!%%V!
-    echo %%V=!%%V!>> settingss
+    echo %%V=!%%V!>> settings
 )
 for %%V in (!sVariables!) do (
     set /p "%%V=Enter string or non-integer value for %%V: "
-    echo %%V=!%%V!>> settingss
+    echo %%V=!%%V!>> settings
 )
 cls
 rem Notify the user that the settings have been saved
-echo Settings saved to settings
+echo Settings saved.
 endlocal
