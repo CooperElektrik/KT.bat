@@ -29,16 +29,21 @@ echo v2 - Stable Diffusion 2.X Training. Set to 0 if you're just training for SD
 echo v_parameter - V Parameterization for SD 2.X. Set to 1 if you're using it, otherwise leave blank.
 echo sdxl - Stable Diffusion XL Training. This will override some settings.
 
-rem Define the list of variables to set
-set variables=nctpp bucket min_bk_res max_bk_res bk_step w_res h_res net_alpha net_dim rank_drop mod_drop net_drop tenc_lr unet_lr lr lr_sched lr_sched_cycle scale_w_norm train_batch data_worker token_length clip_skip snr_gamma v2 v_parameter sdxl
+set nVariables=nctpp bucket min_bk_res max_bk_res bk_step w_res h_res net_alpha net_dim lr_sched_cycle scale_w_norm train_batch data_worker token_length clip_skip snr_gamma v2 v_parameter sdxl
+set sVariables=rank_drop mod_drop net_drop tenc_lr unet_lr lr lr_sched 
 
 rem Initialize the settings file
 echo. > settings
 
 rem Loop through each variable and prompt the user for its value
-for %%V in (!variables!) do (
-    set /p "%%V=Enter value for %%V: "
-    echo %%V=!%%V!>> settings
+for %%V in (!nVariables!) do (
+    set /p "%%V=Enter integer value for %%V: "
+    set /a %%V=!%%V!
+    echo %%V=!%%V!>> settingss
+)
+for %%V in (!sVariables!) do (
+    set /p "%%V=Enter string or non-integer value for %%V: "
+    echo %%V=!%%V!>> settingss
 )
 cls
 rem Notify the user that the settings have been saved

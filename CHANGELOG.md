@@ -10,3 +10,8 @@
 - Preparing for SDXL
 - Moved folderStruct to its own file
 - Renamed `trainer-prep` to `start-train`
+
+# 2023/09/14 - 15:06
+- SDXL support
+- Variables in `settings.bat` are now split into 2 type: nVariables and sVariables
+- `mainPathVariable` renamed to `pathVariable`
