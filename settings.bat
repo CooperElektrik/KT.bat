@@ -25,12 +25,14 @@ echo data_worker - Data Loader Workers. Must be 1 or higher.
 echo token_length - Token Length. Available values: 75, 150, 225
 echo clip_skip - Clip Skip. Should be 2 for NAI
 echo snr_gamma - SNR Gamma. Set this to 5 or 0.
-echo v2 - Stable Diffusion 2.X Training. Set to 0 if you're just training for SD 1.5
+echo mixed_precision - Mixed-precision training. Accepts these values: bf16 , fp16 , no
+echo save_precision - Save model at this precision. Accepts these values: bf16 , fp16 , float
+echo v2 - Stable Diffusion 2.X Training. Set to 0 if you're training for SD 1.5 or SDXL.
 echo v_parameter - V Parameterization for SD 2.X. Set to 1 if you're using it, otherwise leave blank.
 echo sdxl - Stable Diffusion XL Training. This will override some settings.
 
 set nVariables=nctpp bucket min_bk_res max_bk_res bk_step w_res h_res net_alpha net_dim lr_sched_cycle scale_w_norm train_batch data_worker token_length clip_skip snr_gamma v2 v_parameter sdxl
-set sVariables=rank_drop mod_drop net_drop tenc_lr unet_lr lr lr_sched 
+set sVariables=rank_drop mod_drop net_drop tenc_lr unet_lr lr lr_sched mixed_precision save_precision
 
 rem Initialize the settings file
 echo. > settings

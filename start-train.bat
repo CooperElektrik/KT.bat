@@ -133,7 +133,7 @@ for /d %%I in ("!folderPath!\image\*_*") do (
 )
 
 
-set variables=nctpp bucket min_bk_res max_bk_res bk_step w_res h_res net_alpha net_dim rank_drop mod_drop net_drop tenc_lr unet_lr lr lr_sched lr_sched_cycle scale_w_norm train_batch data_worker token_length clip_skip snr_gamma sdxl
+set variables=nctpp bucket min_bk_res max_bk_res bk_step w_res h_res net_alpha net_dim rank_drop mod_drop net_drop tenc_lr unet_lr lr lr_sched lr_sched_cycle scale_w_norm train_batch data_worker token_length clip_skip snr_gamma mixed_precision save_precision sdxl
 
 rem Read values from settings.txt and set the variables
 for /f "usebackq tokens=1* delims==" %%A in ("settings") do (
@@ -202,7 +202,7 @@ if !sdxl! equ 1 (
     set trainerScript="./train_network.py"
 )
 
-echo accelerate launch --num_cpu_threads_per_process=!nctpp! !trainerScript! --pretrained_model_name_or_path="!modelLocation!" --train_data_dir="!imagePathK!" --resolution="!w_res!,!h_res!" --output_dir="!modelPath!" --logging_dir="!logPath!" --network_alpha="!net_alpha!" --save_model_as=safetensors --network_module=networks.lora --network_args rank_dropout="!rank_drop!" module_dropout="!mod_drop!" --text_encoder_lr=!tenc_lr! --unet_lr=!unet_lr! --network_dim=!net_dim! --output_name="!name!" --lr_scheduler_num_cycles="!lr_sched_cycle!" --scale_weight_norms="!scale_w_norm!" --network_dropout="!net_drop!" --no_half_vae --learning_rate="!lr!" --lr_scheduler="!lr_sched!" --train_batch_size="!train_batch!" --max_train_steps="!step!" --save_every_n_epochs="1" --mixed_precision="bf16" --save_precision="bf16" --seed="1234" --caption_extension=".txt" --cache_latents --optimizer_type="AdamW8bit" --max_data_loader_n_workers="!data_worker!" --max_token_length=!token_length! --clip_skip=!clip_skip! --caption_dropout_every_n_epochs="!dropOutInterval!" --caption_dropout_rate="0.05" --bucket_reso_steps=!bk_step! --min_snr_gamma=!snr_gamma! --shuffle_caption --gradient_checkpointing --xformers --persistent_data_loader_workers --noise_offset=0.0 > temp
+echo accelerate launch --num_cpu_threads_per_process=!nctpp! !trainerScript! --pretrained_model_name_or_path="!modelLocation!" --train_data_dir="!imagePathK!" --resolution="!w_res!,!h_res!" --output_dir="!modelPath!" --logging_dir="!logPath!" --network_alpha="!net_alpha!" --save_model_as=safetensors --network_module=networks.lora --network_args rank_dropout="!rank_drop!" module_dropout="!mod_drop!" --text_encoder_lr=!tenc_lr! --unet_lr=!unet_lr! --network_dim=!net_dim! --output_name="!name!" --lr_scheduler_num_cycles="!lr_sched_cycle!" --scale_weight_norms="!scale_w_norm!" --network_dropout="!net_drop!" --no_half_vae --learning_rate="!lr!" --lr_scheduler="!lr_sched!" --train_batch_size="!train_batch!" --max_train_steps="!step!" --save_every_n_epochs="1" --mixed_precision="!mixed_precision!" --save_precision="!save_precision!" --seed="1234" --caption_extension=".txt" --cache_latents --optimizer_type="AdamW8bit" --max_data_loader_n_workers="!data_worker!" --max_token_length=!token_length! --clip_skip=!clip_skip! --caption_dropout_every_n_epochs="!dropOutInterval!" --caption_dropout_rate="0.05" --bucket_reso_steps=!bk_step! --min_snr_gamma=!snr_gamma! --shuffle_caption --gradient_checkpointing --xformers --persistent_data_loader_workers --noise_offset=0.0 > temp
 rem SD 2.X training
 if "%v2%"=="1" (
     if "%v_parameter%"=="1" (
